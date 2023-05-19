@@ -59,7 +59,7 @@ class BaseRecModel(nn.Module):
         return self.forward_with_embs(self.get_embs(x))
 
     def predict(self, batch_size=1024):
-        test_loader = DataLoader(Dataset('../data/test_test'), batch_size=batch_size)
+        test_loader = DataLoader(Dataset('../data/test_test', fea_mask=True), batch_size=batch_size)
         self.eval()
         with torch.no_grad():
             pred, target = [], []
@@ -72,7 +72,7 @@ class BaseRecModel(nn.Module):
         return auc, logloss
 
     def pre_train(self, batch_size, lr, epochs=1):
-        train_loader = DataLoader(Dataset('../data/big_train_main'), batch_size=batch_size, shuffle=True)
+        train_loader = DataLoader(Dataset('../data/big_train_main', fea_mask=True), batch_size=batch_size, shuffle=True)
         optimizer = torch.optim.Adam(self.parameters(), lr)
         loss_func = nn.BCELoss(reduction='mean')
         tot_loss = 0.0
@@ -106,7 +106,7 @@ class BaseRecModel(nn.Module):
         tot_epoch = 0
 
         for idx in ['a', 'b', 'c']:
-            train_loader = DataLoader(Dataset('../data/test_oneshot_' + idx), batch_size=batch_size, shuffle=True)
+            train_loader = DataLoader(Dataset('../data/test_oneshot_' + idx, fea_mask=True), batch_size=batch_size, shuffle=True)
             for x, y in train_loader:
                 pred_y = self(x.to(device))
                 loss = loss_func(pred_y, y.float().to(device))

@@ -18,20 +18,26 @@ def read_pkl(file):
     return t
 
 
-def get_data(data):
+def get_data(data, fea_mask):
     one_hot_feat = [col for col, _ in col_num[:-2]]
     data_x = data[one_hot_feat].to_numpy()
     data_g = np.array(data.Genres.apply(lambda x: np.array((4 - len(x)) * [0] + x[:4])).to_list())
     data_t = np.array(data.Title.apply(lambda x: np.array((8 - len(x)) * [0] + x[:8])).to_list())
+    if fea_mask:
+        for title in data_t:
+            idx = np.nonzero(title)[0]
+            if idx.size > 1:
+                title[idx[0]] = 0
+
     data_y = data['y'].values.reshape(-1, 1)
     return np.hstack([data_x, data_g, data_t]), data_y
 
 
 class Dataset(_Dataset):
-    def __init__(self, name):
+    def __init__(self, name, fea_mask=False):
         super().__init__()
         data = read_pkl(name + '.pkl')
-        self.x, self.y = get_data(data)
+        self.x, self.y = get_data(data, fea_mask)
 
     def __getitem__(self, idx):
         return self.x[idx], self.y[idx]

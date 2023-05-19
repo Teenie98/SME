@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     def parse_args():
         parser = argparse.ArgumentParser()
-        parser.add_argument('--model', type=str, default='SME', help='MetaEmb MWUF GME SME SME2')
+        parser.add_argument('--model', type=str, default='SME2', help='MetaEmb MWUF GME SME SME2')
         parser.add_argument('--seed', type=int, default=2023)
         parser.add_argument('--meta_learning_rate', type=float, default=1e-3)
         parser.add_argument('--cold_learning_rate', type=float, default=1e-4)
