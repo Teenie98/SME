@@ -20,8 +20,8 @@ class BaseGenModel(nn.Module):
         loss_func = nn.BCELoss(reduction='mean')
 
         for Da, Db in [['a', 'b'], ['c', 'd']]:
-            train_loader_a = DataLoader(Dataset('../data/train_oneshot_' + Da), batch_size=batch_size, shuffle=False)
-            train_loader_b = DataLoader(Dataset('../data/train_oneshot_' + Db), batch_size=batch_size, shuffle=False)
+            train_loader_a = DataLoader(Dataset('../data/train_oneshot_' + Da, fea_mask=True), batch_size=batch_size, shuffle=False)
+            train_loader_b = DataLoader(Dataset('../data/train_oneshot_' + Db, fea_mask=True), batch_size=batch_size, shuffle=False)
 
             tot_loss = 0.0
             tot_epoch = 0
@@ -53,7 +53,7 @@ class BaseGenModel(nn.Module):
 
     def init_id_embedding(self, rec_model):
         # 每20个数据里包含的item是相同的
-        test_loader = DataLoader(Dataset('../data/test_oneshot_a'), batch_size=20, shuffle=False)
+        test_loader = DataLoader(Dataset('../data/test_oneshot_a', fea_mask=True), batch_size=20, shuffle=False)
 
         self.eval()
         rec_model.eval()
