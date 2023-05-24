@@ -1,6 +1,7 @@
 import pickle
 import numpy as np
 from torch.utils.data import Dataset as _Dataset
+import random
 
 col_num = [('MovieID', 4000),
            ('UserID', 6050),
@@ -27,6 +28,8 @@ def get_data(data, fea_mask):
         for title in data_t:
             idx = np.nonzero(title)[0]
             if idx.size > 1:
+                # random_mask_idx = random.choice(idx)
+                # title[random_mask_idx] = title[idx[0]]
                 title[idx[0]] = 0
 
     data_y = data['y'].values.reshape(-1, 1)

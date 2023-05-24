@@ -72,7 +72,7 @@ class BaseRecModel(nn.Module):
         return auc, logloss
 
     def pre_train(self, batch_size, lr, epochs=1):
-        train_loader = DataLoader(Dataset('../data/big_train_main', fea_mask=True), batch_size=batch_size, shuffle=True)
+        train_loader = DataLoader(Dataset('../data/big_train_main', fea_mask=False), batch_size=batch_size, shuffle=True)
         optimizer = torch.optim.Adam(self.parameters(), lr)
         loss_func = nn.BCELoss(reduction='mean')
         tot_loss = 0.0
@@ -119,4 +119,4 @@ class BaseRecModel(nn.Module):
                 tot_epoch += 1
             print('warm-up {} train loss:{:.4f}'.format(idx, tot_loss / tot_epoch))
             test_auc, test_logloss = self.predict()
-            print('test auc: {:.4f}, logloss: {:.4f}'.format(test_auc, test_logloss))
+            print('test auc: {:.8f}, logloss: {:.4f}'.format(test_auc, test_logloss))

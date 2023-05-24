@@ -24,7 +24,7 @@ if __name__ == '__main__':
         parser.add_argument('--generator_hidden_size', type=int, default=16)
         parser.add_argument('--generator_train_batch_size', type=int, default=500)
         parser.add_argument('--alpha', type=float, default=0.1)
-        parser.add_argument('--base_model', type=str, default='deepfm', help='deepfm wideanddeep ipnn opnn afm')
+        parser.add_argument('--base_model', type=str, default='opnn', help='deepfm wideanddeep ipnn opnn afm')
 
         args = parser.parse_args()
         return args
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     rec_model.load_state_dict(torch.load("../rec_models/save_p/{}_parameter.pkl".format(args.base_model)))
 
     test_auc, test_logloss = rec_model.predict()
-    print('base model test auc: {:.4f}, logloss: {:.4f}'.format(test_auc, test_logloss))
+    print('base model test auc: {:.8f}, logloss: {:.4f}'.format(test_auc, test_logloss))
 
     model = model_dict[args.model](args).to(device)
     if args.model == "MWUF":
@@ -49,7 +49,7 @@ if __name__ == '__main__':
         model.meta_network_train(scaling_net, shifting_net, rec_model)
 
         test_auc, test_logloss = rec_model.predict()
-        print('init\ntest auc: {:.4f}, logloss: {:.4f}'.format(test_auc, test_logloss))
+        print('init\ntest auc: {:.8f}, logloss: {:.4f}'.format(test_auc, test_logloss))
 
         print('warm up training...')
         model.warm_up_train(rec_model, scaling_net, shifting_net, args.warm_up_batch_size, args.warm_up_learning_rate, 'MovieID')
@@ -63,7 +63,7 @@ if __name__ == '__main__':
 
         model.init_id_embedding(rec_model)
         test_auc, test_logloss = rec_model.predict()
-        print('init\ntest auc: {:.4f}, logloss: {:.4f}'.format(test_auc, test_logloss))
+        print('init\ntest auc: {:.8f}, logloss: {:.4f}'.format(test_auc, test_logloss))
 
         print('warm up training...')
         rec_model.warm_up_train(args.warm_up_batch_size, args.warm_up_learning_rate, 'MovieID')

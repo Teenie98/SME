@@ -34,7 +34,7 @@ if __name__ == "__main__":
     assert args.model in model_dict
     model = model_dict[args.model](args).to(device)
 
-    if args.pretrain:
+    if args.pretrain==1:
         print('training model {}...'.format(args.model))
         model.pre_train(args.batch_size, args.learning_rate)
         torch.save(model.state_dict(), "./save_p/{}_parameter.pkl".format(args.model))
@@ -43,7 +43,7 @@ if __name__ == "__main__":
         model.load_state_dict(torch.load("./save_p/{}_parameter.pkl".format(args.model)))
 
     test_auc, test_logloss = model.predict()
-    print('test auc: {:.4f}, logloss: {:.4f}'.format(test_auc, test_logloss))
+    print('test auc: {:.8f}, logloss: {:.4f}'.format(test_auc, test_logloss))
 
     print('warm up training...')
     model.warm_up_train(args.warm_up_batch_size, args.warm_up_learning_rate, 'MovieID')
